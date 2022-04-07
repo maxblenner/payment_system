@@ -30,4 +30,13 @@ class Employee(object):
         elif overHours > 0:
             overPay = overHours * self.__overRate
 
+        #print statements to ensure payment calcuations are working as intended
+        print("Standard hours worked: ", stdHours)
+        print("Standard pay: ", stdPay)
+        print("Overtime hours worked: ", overHours)
+        print("Overtime pay: ", overPay) 
+
+e1 = Employee(12110,'John Greene', 15.45, 18.25, 35, 60.50, 700)
+
+e1.computePayment(35)
 
