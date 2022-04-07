@@ -14,22 +14,20 @@ class Employee(object):
     
     def computePayment(self,hours):
         if hours <= self.__stdCut: #if the employee did not work enough hours for overtime payment
-            #separating standard and overtime hours for logging/book-keeping purposes
+            #separating standard and overtime hours 
             stdHours = hours
             overHours = 0
             
-            #calculating standard and overtime pay individually
-            stdPay = hours * self.__stdRate
-            overPay = 0
-        
         elif hours > self.__stdCut: #if the employeed worked enough hours for overtime pay
-            #separating standard and overtime hours for logging/book-keeping purposes
+            #separating standard and overtime hours
             stdHours = self.__stdCut
             overHours = hours - self.__stdCut
 
-            
-            #calculating standard and overtime pay individually
-            stdPay = self.__stdCut * self.__stdRate
-            overPay = (hours - self.__stdCut) * self.__overRate
+        #calculating standard and overtime pay individually
+        stdPay = stdHours * self.__stdRate
+        if overHours == 0: #if there are no overtime hours to calculate, avoid multiplication of 0
+            overPay = 0
+        elif overHours > 0:
+            overPay = overHours * self.__overRate
 
 
