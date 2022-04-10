@@ -13,11 +13,12 @@ class Employee(object):
         self.__taxCredit = taxCredit
         self.__stdBand = stdBand
     
-    def computePayment(self,hours):
+    def computePayment(self,hours,date):
 
         print("Tax Credit: ",self.__taxCredit)
 
         #assertions made before calculations are processed
+        myDict = {}
         overRate = self.__hourlyRate * self.__OTMulti
         stdTax = 0.20
         highTax = 0.40
@@ -43,27 +44,59 @@ class Employee(object):
         grossPay = stdPay + overPay #pay before tax calculations
 
         if grossPay > self.__stdBand: #if a higher tax rate needs to be accounted for
-            stdTaxCharge = self.__stdBand * stdTax
-            highTaxCharge = (grossPay - self.__stdBand) * highTax
+            stdPayTaxable = self.__stdBand
+            stdTaxCharge = stdPayTaxable * stdTax
+            highPayTaxable = grossPay - self.__stdBand
+            highTaxCharge = (highPayTaxable) * highTax
             
         elif grossPay <= self.__stdBand: #if a higher tax rate does not need to be accounted for
-            stdTaxCharge = grossPay * stdTax
+            stdPayTaxable = grossPay
+            stdTaxCharge = stdPayTaxable * stdTax
+            highPayTaxable = 0 #for book-keeping reasons
             highTaxCharge = 0 #for book-keeping reasons
         
-        taxCharge = stdTaxCharge + highTaxCharge
+        taxAdded = stdTaxCharge + highTaxCharge
         PRSICharge = grossPay * PRSI #calculated separately as it is not subject to tax credit
 
         if self.__taxCredit > 0: #if the employee has any tax credit
-            if self.__taxCredit > taxCharge: #an if statement to avoid negative taxes
-                self.__taxCredit = self.__taxCredit - taxCharge
-                taxCharge = 0
-            elif self.__taxCredit <= taxCharge: #if tax credit is less than the tax charge
-                taxCharge = taxCharge - self.__taxCredit
-                self.__taxCredit = 0
+            if self.__taxCredit > taxAdded: #an if statement to avoid negative taxes
+                taxCredit = self.__taxCredit #for book-keeping
+                self.__taxCredit = self.__taxCredit - taxAdded #reducing tax credit based on how much was used
+                netTax = 0
+            elif self.__taxCredit <= taxAdded: #if tax credit is less than the tax charge
+                netTax = taxAdded - self.__taxCredit
+                taxCredit = self.__taxCredit #for book-keeping
+                self.__taxCredit = 0 #reducing tax credit based on how much was used
         
-        totalTax = taxCharge + PRSI #taxes to be paid
+        totalTax = netTax + PRSI #taxes to be paid
 
         netPay = grossPay - totalTax
+
+        name = self.__fName + self.__lName
+
+        myDict = {
+            'Name' : name,
+            'Date' : date,
+            'Regular Hours Worked' : stdHours,
+            'Overtime Hours Worked' : overHours,
+            'Regular Rate' : self.__hourlyRate,
+            'Overtime Rate' : overRate,
+            'Regular Pay' : stdPay,
+            'Overtime Pay' : overPay,
+            'Gross Pay' : grossPay,
+            'Standard Rate Pay' : stdPayTaxable,
+            'Higher Rate Pay' : highPayTaxable,
+            'Standard Tax' : stdTaxCharge,
+            'Higher Tax' : highPayTaxable,
+            'Total Tax' : taxAdded,
+            'Tax Credit' : taxCredit,
+            'Net Tax' : netTax,
+            'PRSI' : PRSICharge,
+            'Net Deductions' : totalTax,
+            'Net Pay' : netPay
+        }
+
+        print(myDict)
 
         #print statements to ensure payment calcuations are working as intended
         print("Standard hours worked: ", stdHours)
@@ -74,16 +107,12 @@ class Employee(object):
         print("PRSI: ", PRSICharge)
         print("Standard Tax: ", stdTaxCharge)
         print("Higher Tax: ", highTaxCharge)
-        print("Tax charge (after tax credit): ", taxCharge)
+        print("Taxes added: ", taxAdded)
+        print("Tax charge (after tax credit): ", netTax)
         print("Total taxes to be paid: ", totalTax)
         print("Net pay: ", netPay)
 
+e1 = Employee(12110,'Green', 'Joe', 35, 18.45, 1.5, 60.50, 700)
 
-
-
-
-
-e1 = Employee(12110,'Green', 'Joe', 35, 15.45, 1.5, 60.50, 700)
-
-e1.computePayment(37)
+e1.computePayment(40,'09/04/22')
 
