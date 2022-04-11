@@ -1,4 +1,19 @@
+#GitHub Link: https://github.com/maxblenner/payment_system
+
+#Advanced Programming Techniques CA ONE
+#Max Blennerhassett 10342271
+
+
 #Create a class Employee, and create and test a function to compute net pay from payment, work and tax credit information.
+
+#The steps taken were:
+#Creating the class, 
+#Testing that an object could be made,
+#Made the payment calucations and used print statements to check if everything was working
+#Cleaned everything up and created a dictionary output. 
+#Created test method and test cases
+#Final bug fixes
+#Finished
 
 import unittest
 
@@ -17,7 +32,7 @@ class Employee(object):
     
     def computePayment(self,hours,date):
 
-        if hours > 0: #checking that sufficient hours are entered 
+        if hours > 0 and hours < 85: #checking that sufficient hours are entered, for no hours and 85 (84 is 12 hours a day for 7 days)
             
             #assertions made before calculations are processed
             myDict = {}
@@ -148,6 +163,12 @@ class testEmployee(unittest.TestCase):
         e1 = Employee(12110,'Green', 'Joe', 35, 18.45, 1.5, 60.50, 700) #200 Euro Tax credit
         with self.assertRaises(ValueError):
             e1.computePayment(-1, '09/04/22') #negative amount of hours worked tested
+
+    def testTooManyHoursWorked(self): #Hours worked cannot exceed 84
+        e1 = Employee(12110,'Green', 'Joe', 35, 18.45, 1.5, 60.50, 700) #200 Euro Tax credit
+        with self.assertRaises(ValueError):
+            e1.computePayment(85, '09/04/22') #negative amount of hours worked tested
+    
     
 unittest.main(argv=['ignored'],exit=False)
 
