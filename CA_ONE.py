@@ -3,7 +3,6 @@
 #Advanced Programming Techniques CA ONE
 #Max Blennerhassett 10342271
 
-
 #Create a class Employee, and create and test a function to compute net pay from payment, work and tax credit information.
 
 #The steps taken were:
@@ -19,7 +18,6 @@ import unittest
 
 class Employee(object):
 
-    #variables needed are: self, staffID, fName, lName, regHours, hourlyRate, OTMulti, taxCredit, stdBand
     def __init__(self, staffID, fName, lName, regHours, hourlyRate, OTMulti, taxCredit, stdBand):
         self.__staffID = staffID
         self.__fName = fName
@@ -35,7 +33,7 @@ class Employee(object):
         if self.__OTMulti < 1: #making sure overtime multiple is at least 1 (employee cannot make less money working overtime)
             raise ValueError("Insufficient Overtime Multiple")
         
-        if hours > 0 and hours < 85: #checking that sufficient hours are entered, for no hours and 85 (84 is 12 hours a day for 7 days)
+        if hours > 0 and hours < 85: #checking that sufficient hours are entered, for 0 hours and 85 (84 is 12 hours a day for 7 days)
             
             #assertions made before calculations are processed
             myDict = {}
