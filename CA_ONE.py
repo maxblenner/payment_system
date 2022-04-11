@@ -31,7 +31,10 @@ class Employee(object):
         self.__stdBand = stdBand
     
     def computePayment(self,hours,date):
-
+        
+        if self.__OTMulti < 1: #making sure overtime multiple is at least 1 (employee cannot make less money working overtime)
+            raise ValueError("Insufficient Overtime Multiple")
+        
         if hours > 0 and hours < 85: #checking that sufficient hours are entered, for no hours and 85 (84 is 12 hours a day for 7 days)
             
             #assertions made before calculations are processed
@@ -47,7 +50,6 @@ class Employee(object):
                 overHours = 0
                 
             elif hours > self.__regHours: #if the employeed worked enough hours for overtime pay
-                #separating standard and overtime hours
                 regHours = self.__regHours
                 overHours = hours - self.__regHours
 
@@ -160,14 +162,19 @@ class testEmployee(unittest.TestCase):
         self.assertGreaterEqual(pi['Standard Tax'], 0)
 
     def testNegHoursWorked(self): #Hours worked cannot be negative
-        e1 = Employee(12110,'Green', 'Joe', 35, 18.45, 1.5, 60.50, 700) #200 Euro Tax credit
+        e1 = Employee(12110,'Green', 'Joe', 35, 18.45, 1.5, 60.50, 700) 
         with self.assertRaises(ValueError):
             e1.computePayment(-1, '09/04/22') #negative amount of hours worked tested
 
     def testTooManyHoursWorked(self): #Hours worked cannot exceed 84
-        e1 = Employee(12110,'Green', 'Joe', 35, 18.45, 1.5, 60.50, 700) #200 Euro Tax credit
+        e1 = Employee(12110,'Green', 'Joe', 35, 18.45, 1.5, 60.50, 700) 
         with self.assertRaises(ValueError):
             e1.computePayment(85, '09/04/22') #negative amount of hours worked tested
+    
+    def testOverMultiNegative(self): #Overtime multiple of less than 1 is not possible
+        e1 = Employee(12110,'Green', 'Joe', 35, 18.45, -1, 60.50, 700) #overtime multiple is -1
+        with self.assertRaises(ValueError):
+            e1.computePayment(1, '09/04/22') #negative amount of hours worked tested
     
     
 unittest.main(argv=['ignored'],exit=False)
